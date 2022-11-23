@@ -1,5 +1,7 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Recepie } from '../recepie.model';
+import { RecipeService } from '../recipe.service';
 
 @Component({
   selector: 'app-recepie-list',
@@ -7,26 +9,19 @@ import { Recepie } from '../recepie.model';
   styleUrls: ['./recepie-list.component.css'],
 })
 export class RecepieListComponent implements OnInit {
-  recipes: Recepie[] = [
-    new Recepie(
-      'Teszt recepie',
-      'Teszt description',
-      'https://static01.nyt.com/images/2021/11/21/dining/09EasyWeeknight-Roundup-top-art/merlin_195006771_cae41629-d1c8-4ae3-8d18-c32b67d1ecc0-superJumbo.jpg?quality=75&auto=webp'
-    ),
-    new Recepie(
-      'Teszt recepie',
-      'Teszt description',
-      'https://static01.nyt.com/images/2021/11/21/dining/09EasyWeeknight-Roundup-top-art/merlin_195006771_cae41629-d1c8-4ae3-8d18-c32b67d1ecc0-superJumbo.jpg?quality=75&auto=webp'
-    ),
-  ];
+  recipes: Recepie[];
 
-  @Output() recipeWasSelected = new EventEmitter<Recepie>();
+  constructor(
+    private recipeService: RecipeService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
-  constructor() {}
+  ngOnInit(): void {
+    this.recipes = this.recipeService.getRecipes();
+  }
 
-  ngOnInit(): void {}
-
-  onRecipeSelected(recipe: Recepie) {
-    this.recipeWasSelected.emit(recipe);
+  onNewRecipe() {
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 }
